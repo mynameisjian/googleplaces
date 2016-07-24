@@ -1,0 +1,27 @@
+{
+    "name": "jianhan/googleplaces",
+    "description": "PHP wrapper for google places API",
+    "license": "MIT",
+    "keywords": ["jianhan", "google", "places", "api"],
+    "authors": [
+        {
+            "name": "Jian Han",
+            "email": "jianhan@mail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "jianhan@mail.com"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "JianHan\\GooglePlaces\\": "src"
+        }
+    }
+}
