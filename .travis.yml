@@ -9,4 +9,11 @@ before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
  
-script: vendor/bin/phpunit
+script:
+  - mkdir -p build/logs
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+addons:
+  code_climate:
+    repo_token: 727e46c8df1c91114996544bb0715f3e397ea9a752a9f62bbd7afcbe0eae9bfb
+after_script:
+  - vendor/bin/test-reporter

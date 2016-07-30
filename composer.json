@@ -23,7 +23,7 @@
         "squizlabs/php_codesniffer": "2.*",
         "phpmd/phpmd" : "@stable",
         "phploc/phploc": "*",
-        "phing/phing": "2.*"
+        "codeclimate/php-test-reporter": "dev-master"
     },
     "autoload": {
         "psr-4": {
