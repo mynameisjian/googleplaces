@@ -254,7 +254,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 * @dataProvider invalidKeyProvider
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testConstructorWithInvalidKeys($invalidKey)
+	public function testConstructorWithInvalidKey($invalidKey)
 	{
 
 		$this->getMockForAbstractClass($this->classNameToBeTested, array($invalidKey));
@@ -265,7 +265,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 * @depends testExist
 	 * @dataProvider validKeyProvider
 	 */
-	public function testConstructorWithValidKeys($validKey)
+	public function testConstructorWithValidKey($validKey)
 	{
 
 		$abstractPlace = $this->getMockForAbstractClass($this->classNameToBeTested, array($validKey));
@@ -292,6 +292,22 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(is_string($getCurrentKey), TRUE);
 
 		$this->assertEquals($getCurrentKey , $currentKey);
+
+	}
+
+	/**
+	 * @dataProvider invalidKeyProvider
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testSetInvalidKey($invalidKey)
+	{
+
+		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
+			 				  ->setMethods(null)
+				 			  ->disableOriginalConstructor()
+			 				  ->getMock();	
+
+		$abstractPlace->setKey($invalidKey);
 
 	}
 
@@ -386,7 +402,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
 			 				  ->setMethods(null)
 				 			  ->disableOriginalConstructor()
-			 				  ->getMock();	
+			 				  ->getMock();
 		
 		$abstractPlace->setRequestParameters($inputArray);
 

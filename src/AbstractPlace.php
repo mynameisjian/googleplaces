@@ -4,24 +4,51 @@ namespace JianHan\GooglePlaces;
 
 class AbstractPlace
 {
-	
+
+	// https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters	
+	// https://maps.googleapis.com/maps/api/place/nearbysearch/json
+	// https://maps.googleapis.com/maps/api/place/textsearch/output
+	// https://maps.googleapis.com/maps/api/place/details/json
+	// https://maps.googleapis.com/maps/api/place/add/json
+
+	const GOOGLE_PLACE_URL_PREFIX = 'https://maps.googleapis.com/maps/api/place/';
+
 	protected $key;	
 
 	protected $requestParameters;
+	
+	protected $outputFormat;	
 
-	public function __construct($key, $requestParameters = array())
+	public function __construct($key, $requestParameters = array(), $outputFormat = 'json')
 	{
 
-		if(!is_string($key) || empty(trim($key))) throw new \InvalidArgumentException("Key must be a string and must not be empty");
+		$this->validateString($key, 'Key');
 
-		$this->validateRequestParameters($requestParameters);
+		$this->validateString($outputFormat, 'Output format');
 
+		if($outputFormat != 'json' && $outputFormat != 'xml')
+		{
+			throw new \InvalidArgumentException('Output format must be json or xml');
+		}
+
+		$this->outputFormat = $outputFormat;
+			
 		$this->key = $key;
 
-		$this->requestParameters = $requestParameters;
+		$this->requestParameters = $this->validateRequestParameters($requestParameters);
 
 	}
 	
+	protected function validateString($string, $displayName)
+	{
+
+		if(!is_string($string) || trim($string) === '')
+		{
+			throw new \InvalidArgumentException("$displayName must be a string and must not be empty");
+		}
+
+	}	
+
 	protected function validateRequestParameters($requestParameters)
 	{
 
@@ -29,10 +56,14 @@ class AbstractPlace
 
 		foreach ($requestParameters as $key => $value) 
 		{
-			if(!is_string($value)) throw new \InvalidArgumentException("All request parameters value must be string");
 
-			if(!is_string($key)) throw new \InvalidArgumentException("All request parameter keys must be string");
+			$this->validateString($value, 'All request parameter values');
+
+			$this->validateString($key, 'All request parameter keys');
+
 		}		
+
+		return $requestParameters;
 
 	}
 
@@ -45,6 +76,8 @@ class AbstractPlace
 
 	public function setKey($key)
 	{
+
+		$this->validateString($key, 'Key');
 
 		$this->key = $key;
 
@@ -60,6 +93,8 @@ class AbstractPlace
 	public function setRequestParameters(array $requestParameters = array())
 	{
 
+		$this->validateRequestParameters($requestParameters);
+
 		$this->requestParameters = $requestParameters;
 
 	}
@@ -67,12 +102,9 @@ class AbstractPlace
 	public function setRequestParameter($parameterKey, $parameterValue)
 	{
 
-		if(!is_string($parameterKey) && !is_numeric($parameterKey) || !is_string($parameterValue) && !is_numeric($parameterValue))
-		{
-			throw new \InvalidArgumentException("Request parameter both key and value must be string or number");
-		}
+		$this->validateString($parameterKey, 'Request parameter key');
 
-		if(empty($parameterKey) || empty($parameterValue)) throw new \InvalidArgumentException("Request parameter key and value bot not be empty");
+		$this->validateString($parameterValue, 'Request parameter value');
 
 		$parameterKey = (string)$parameterKey;
 
@@ -85,7 +117,7 @@ class AbstractPlace
 	public function getRequestParameter($parameterKey)
 	{
 
-		if(!is_string($parameterKey) || empty($parameterKey)) throw new \InvalidArgumentException("Request parameter key must be string and can not be empty");
+		$this->validateString($parameterKey, 'Request parameter key');
 
 		return $this->requestParameters[$parameterKey];
 
