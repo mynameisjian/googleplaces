@@ -48,7 +48,8 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
     		array(1.2e3),
     		array(7E-10),
     		array([1,2,3]),
-    		array(new stdClass())
+    		array(new stdClass()),
+    		array('')
     	);
 
     }
@@ -67,12 +68,14 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
     	return [
 
+    		array(''),
     		array(TRUE),
     		array(FALSE),
     		array(rand(1,2000)),
     		array(1.234),
     		array(1.2e3),
     		array(7E-10),
+    		[['query1' => 'query1', 'query2']],
     		[1,2,3,[1,2,3],4,5,6],
     		array(new stdClass()),
     		[['invalidStdClass' => new stdClass()]]
@@ -86,6 +89,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	        array('invalidboolean', false),
 	        array('invalidObject', new stdClass()),
 	        array('invalidArray', [1,2,3]),
+	        array('invalidArray', ''),
 	    );
 
     }
@@ -323,7 +327,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 * @dataProvider invalidRequestParameterArray
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testSetRequestParameter($key, $value)
+	public function testSetRequestParameterInvalid($key, $value)
 	{
 
 		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
@@ -333,6 +337,41 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
 
 		$abstractPlace->setRequestParameter($key, $value);
+
+	}
+
+	/**
+	 * @dataProvider invalidKeyProvider
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testGetRequestParameterInvalid($invalidKey)
+	{
+
+		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
+			 				  ->setMethods(null)
+				 			  ->disableOriginalConstructor()
+			 				  ->getMock();
+
+
+		$abstractPlace->getRequestParameter($invalidKey);
+
+	}
+
+	/**
+	 * @depends testSetRequestParameterInvalid
+	 */
+	public function testSetGetRequestParameter()
+	{
+
+		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
+			 				  ->setMethods(null)
+				 			  ->disableOriginalConstructor()
+			 				  ->getMock();
+
+
+		$abstractPlace->setRequestParameter('query1', '1');
+
+		$this->assertEquals($abstractPlace->getRequestParameter('query1'), '1');
 
 	}
 

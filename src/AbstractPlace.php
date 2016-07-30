@@ -30,6 +30,8 @@ class AbstractPlace
 		foreach ($requestParameters as $key => $value) 
 		{
 			if(!is_string($value)) throw new \InvalidArgumentException("All request parameters value must be string");
+
+			if(!is_string($key)) throw new \InvalidArgumentException("All request parameter keys must be string");
 		}		
 
 	}
@@ -67,14 +69,25 @@ class AbstractPlace
 
 		if(!is_string($parameterKey) && !is_numeric($parameterKey) || !is_string($parameterValue) && !is_numeric($parameterValue))
 		{
-			throw new \InvalidArgumentException("Request parameter both key and value must be string or number");	
+			throw new \InvalidArgumentException("Request parameter both key and value must be string or number");
 		}
+
+		if(empty($parameterKey) || empty($parameterValue)) throw new \InvalidArgumentException("Request parameter key and value bot not be empty");
 
 		$parameterKey = (string)$parameterKey;
 
 		$parameterValue = (string)$parameterValue;
 
 		$this->requestParameters[$parameterKey] = $parameterValue;
+
+	}
+
+	public function getRequestParameter($parameterKey)
+	{
+
+		if(!is_string($parameterKey) || empty($parameterKey)) throw new \InvalidArgumentException("Request parameter key must be string and can not be empty");
+
+		return $this->requestParameters[$parameterKey];
 
 	}
 
