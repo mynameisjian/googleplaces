@@ -9,14 +9,28 @@ class AbstractPlace
 
 	protected $requestParameters;
 
-	public function __construct($key, array $requestParameters = array())
+	public function __construct($key, $requestParameters = array())
 	{
 
 		if(!is_string($key) || empty(trim($key))) throw new \InvalidArgumentException("Key must be a string and must not be empty");
 
+		$this->validateRequestParameters($requestParameters);
+
 		$this->key = $key;
 
 		$this->requestParameters = $requestParameters;
+
+	}
+	
+	protected function validateRequestParameters($requestParameters)
+	{
+
+		if(!is_array($requestParameters)) throw new \InvalidArgumentException("Request parameters must be an array");
+
+		foreach ($requestParameters as $key => $value) 
+		{
+			if(!is_string($value)) throw new \InvalidArgumentException("All request parameters value must be string");
+		}		
 
 	}
 
@@ -45,6 +59,22 @@ class AbstractPlace
 	{
 
 		$this->requestParameters = $requestParameters;
+
+	}
+
+	public function setRequestParameter($parameterKey, $parameterValue)
+	{
+
+		if(!is_string($parameterKey) && !is_numeric($parameterKey) || !is_string($parameterValue) && !is_numeric($parameterValue))
+		{
+			throw new \InvalidArgumentException("Request parameter both key and value must be string or number");	
+		}
+
+		$parameterKey = (string)$parameterKey;
+
+		$parameterValue = (string)$parameterValue;
+
+		$this->requestParameters[$parameterKey] = $parameterValue;
 
 	}
 

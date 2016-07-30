@@ -53,6 +53,42 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public static function validRequestParametersProvider()
+    {
+    	return [
+
+    		[['query' => 'test']],
+
+    	];
+    }
+
+    public static function invalidRequestParametersProvider()
+    {
+
+    	return [
+
+    		array(TRUE),
+    		array(FALSE),
+    		array(rand(1,2000)),
+    		array(1.234),
+    		array(1.2e3),
+    		array(7E-10),
+    		[1,2,3,[1,2,3],4,5,6],
+    		array(new stdClass())
+
+    	];
+    }
+
+    public static function invalidRequestParameterArray()
+    {
+    	return array(
+	        array('invalidboolean', false),
+	        array('invalidObject', new stdClass()),
+	        array('invalidArray', [1,2,3]),
+	    );
+
+    }
+
 	public function testExist()
 	{
 		$this->assertTrue(class_exists($this->classNameToBeTested));
@@ -193,7 +229,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testConstructorWithNull()
 	{
 
-		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array(NULL));
+		$abstractPlace = $this->getMockForAbstractClass($this->classNameToBeTested, array(NULL));
 
 	}
 
@@ -204,7 +240,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testConstructorWithEmptyKey()
 	{
 
-		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array(''));
+		$abstractPlace = $this->getMockForAbstractClass($this->classNameToBeTested, array(''));
 
 	}
 
@@ -216,7 +252,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testConstructorWithInvalidKeys($invalidKey)
 	{
 
-		$this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array($invalidKey));
+		$this->getMockForAbstractClass($this->classNameToBeTested, array($invalidKey));
 
 	}
 
@@ -227,7 +263,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testConstructorWithValidKeys($validKey)
 	{
 
-		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array($validKey));
+		$abstractPlace = $this->getMockForAbstractClass($this->classNameToBeTested, array($validKey));
 
 		$this->assertEquals($abstractPlace->getKey(), $validKey);
 	}
@@ -240,7 +276,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
 		$originalKey = 'originalKey';
 
-		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array($originalKey));
+		$abstractPlace = $this->getMockForAbstractClass($this->classNameToBeTested, array($originalKey));
 
 		$currentKey = 'currentKey';
 
@@ -251,6 +287,70 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(is_string($getCurrentKey), TRUE);
 
 		$this->assertEquals($getCurrentKey , $currentKey);
+
+	}
+
+	/**
+	 * @depends testExist
+	 * @dataProvider invalidRequestParametersProvider
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testConstructorWithInvalidRequestParameters($invalidRequestParameters)
+	{
+
+		$this->getMockForAbstractClass($this->classNameToBeTested, array('validKey', $invalidRequestParameters));
+
+	}
+
+	/**
+	 * @depends testExist
+	 * @dataProvider invalidRequestParametersProvider
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testValidateRequestParameters($invalidRequestParameters)
+	{
+
+		$this->getMockBuilder($this->classNameToBeTested)
+			 ->setMethods(null)
+			 ->setConstructorArgs(array('validKey', $invalidRequestParameters))
+			 ->getMock();
+
+	}
+
+	/**
+	 * @depends testExist
+	 * @dataProvider invalidRequestParameterArray
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testSetRequestParameter($key, $value)
+	{
+
+		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
+			 				  ->setMethods(null)
+				 			  ->disableOriginalConstructor()
+			 				  ->getMock();
+
+
+		$abstractPlace->setRequestParameter($key, $value);
+
+	}
+
+	/**
+	 * @depends testExist
+	 */
+	public function testSetGetReuqestParameters()
+	{
+
+		$inputArray = ['testQuery1' => 'testQuery1', 'testQuery2' => 'testQuery2'];
+
+		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
+			 				  ->setMethods(null)
+				 			  ->disableOriginalConstructor()
+			 				  ->getMock();	
+		
+		$abstractPlace->setRequestParameters($inputArray);
+
+		$this->assertEquals($abstractPlace->getRequestParameters(), $inputArray);
 
 	}
 
