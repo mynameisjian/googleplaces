@@ -4,7 +4,7 @@ namespace JianHan\GooglePlaces;
 
 class AbstractPlace
 {
-
+	
 	protected $key;	
 
 	protected $requestParameters;
