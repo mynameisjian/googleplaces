@@ -27,6 +27,32 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public static function validKeyProvider()
+    {
+    	return [
+
+    		['AIzaSyAQOXoOT0y2fvf-bW3-ID2kWnYChpLSADd'],
+
+    	];
+    }
+
+    public static function invalidKeyProvider()
+    {
+
+    	return array(
+
+    		array(TRUE),
+    		array(FALSE),
+    		array(rand(1,2000)),
+    		array(1.234),
+    		array(1.2e3),
+    		array(7E-10),
+    		array([1,2,3]),
+    		array(new stdClass())
+    	);
+
+    }
+
 	public function testExist()
 	{
 		$this->assertTrue(class_exists($this->classNameToBeTested));
@@ -175,11 +201,57 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 * @depends testExist
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testConstructorWithEmptyString()
+	public function testConstructorWithEmptyKey()
 	{
 
 		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array(''));
 
 	}
 
-} 
+	/**
+	 * @depends testExist
+	 * @dataProvider invalidKeyProvider
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testConstructorWithInvalidKeys($invalidKey)
+	{
+
+		$this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array($invalidKey));
+
+	}
+
+	/**
+	 * @depends testExist
+	 * @dataProvider validKeyProvider
+	 */
+	public function testConstructorWithValidKeys($validKey)
+	{
+
+		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array($validKey));
+
+		$this->assertEquals($abstractPlace->getKey(), $validKey);
+	}
+
+	/**
+	 * @depends testExist
+	 */
+	public function testSetGetKey()
+	{
+
+		$originalKey = 'originalKey';
+
+		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array($originalKey));
+
+		$currentKey = 'currentKey';
+
+		$abstractPlace->setKey($currentKey);
+
+		$getCurrentKey = $abstractPlace->getKey();
+
+		$this->assertTrue(is_string($getCurrentKey), TRUE);
+
+		$this->assertEquals($getCurrentKey , $currentKey);
+
+	}
+
+}
