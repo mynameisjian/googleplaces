@@ -161,12 +161,24 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @depends testExist
 	 * @expectedException \InvalidArgumentException
 	 */
 	public function testConstructorWithNull()
 	{
 
 		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array(NULL));
+
+	}
+
+	/**
+	 * @depends testExist
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testConstructorWithEmptyString()
+	{
+
+		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array(''));
 
 	}
 

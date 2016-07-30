@@ -12,7 +12,7 @@ class AbstractPlace
 	public function __construct($key, array $requestParameters = array())
 	{
 
-		if(!is_string($key)) throw new \InvalidArgumentException("Key must be a string");
+		if(!is_string($key) || empty(trim($key))) throw new \InvalidArgumentException("Key must be a string and must not be empty");
 
 		$this->key = $key;
 
