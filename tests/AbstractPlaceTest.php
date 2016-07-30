@@ -12,9 +12,18 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	protected function setUp()
     {
 
-        $this->classNameToBeTested = '\\JianHan\\GooglePlaces\\AbstractPlace';
+        $this->classNameToBeTested    	 = '\\JianHan\\GooglePlaces\\AbstractPlace';
 
         $this->reflectionClassToBeTested = new ReflectionClass($this->classNameToBeTested);
+
+    }
+
+    protected function tearDown()
+    {
+
+    	$this->reflectionClassToBeTested = null;
+
+    	$this->classNameToBeTested 		 = null;
 
     }
 
@@ -148,6 +157,16 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 		$method = $this->reflectionClassToBeTested->getMethod('setRequestParameters');
 
 		$this->assertTrue($method->isPublic(), TRUE);		
+
+	}
+
+	/**
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testConstructorWithNull()
+	{
+
+		$abstractPlace = $this->getMockForAbstractClass('\\JianHan\\GooglePlaces\\AbstractPlace', array(NULL));
 
 	}
 
