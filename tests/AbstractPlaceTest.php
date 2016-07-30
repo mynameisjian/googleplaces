@@ -74,7 +74,8 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
     		array(1.2e3),
     		array(7E-10),
     		[1,2,3,[1,2,3],4,5,6],
-    		array(new stdClass())
+    		array(new stdClass()),
+    		[['invalidStdClass' => new stdClass()]]
 
     	];
     }
