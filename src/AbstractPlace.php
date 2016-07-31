@@ -2,14 +2,8 @@
 
 namespace JianHan\GooglePlaces;
 
-class AbstractPlace
+abstract class AbstractPlace
 {
-
-	// https://maps.googleapis.com/maps/api/place/nearbysearch/output?parameters	
-	// https://maps.googleapis.com/maps/api/place/nearbysearch/json
-	// https://maps.googleapis.com/maps/api/place/textsearch/output
-	// https://maps.googleapis.com/maps/api/place/details/json
-	// https://maps.googleapis.com/maps/api/place/add/json
 
 	const GOOGLE_PLACE_URL_PREFIX = 'https://maps.googleapis.com/maps/api/place/';
 
@@ -18,6 +12,8 @@ class AbstractPlace
 	protected $requestParameters;
 	
 	protected $outputFormat;	
+
+	protected $requestUrl;
 
 	public function __construct($key, $requestParameters = array(), $outputFormat = 'json')
 	{
@@ -37,8 +33,20 @@ class AbstractPlace
 
 		$this->requestParameters = $this->validateRequestParameters($requestParameters);
 
+		$this->autoGenerateRequestUrl();
 	}
-	
+
+	protected abstract function validateRequiredParameters();	
+
+	protected function autoGenerateRequestUrl()
+	{
+
+		$reflection = new \ReflectionClass(get_called_class());
+
+		$this->requestUrl = self::GOOGLE_PLACE_URL_PREFIX.strtolower($reflection->getShortName()).'/'.$this->outputFormat;
+
+	}
+
 	protected function validateString($string, $displayName)
 	{
 

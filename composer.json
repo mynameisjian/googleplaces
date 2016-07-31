@@ -29,5 +29,11 @@
         "psr-4": {
             "JianHan\\GooglePlaces\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JianHan\\GooglePlaces\\": "tests"
+        }
     }
+
 }

@@ -9,6 +9,8 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
 	protected $reflectionClassToBeTested;
 
+	protected $mockedAbstractPlace;
+
 	protected function setUp()
     {
 
@@ -16,6 +18,14 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
         $this->reflectionClassToBeTested = new ReflectionClass($this->classNameToBeTested);
 
+        $this->mockedAbstractPlace = $this->getMockBuilder($this->classNameToBeTested)
+			 				  			  ->setMethods(array('validateRequiredParameters'))
+				 			  			  ->disableOriginalConstructor()
+			 				  			  ->getMockForAbstractClass();
+
+		$this->mockedAbstractPlace->expects($this->any())
+             ->method('validateRequiredParameters')
+             ->will($this->returnValue(TRUE));
     }
 
     protected function tearDown()
@@ -24,6 +34,8 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
     	$this->reflectionClassToBeTested = null;
 
     	$this->classNameToBeTested 		 = null;
+
+    	$this->mockedAbstractPlace       = null;
 
     }
 
@@ -254,7 +266,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 * @dataProvider invalidKeyProvider
 	 * @expectedException \InvalidArgumentException
 	 */
-	public function testConstructorWithInvalidKey($invalidKey)
+	public function testConstructorWithInvalidKeys($invalidKey)
 	{
 
 		$this->getMockForAbstractClass($this->classNameToBeTested, array($invalidKey));
@@ -265,7 +277,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 * @depends testExist
 	 * @dataProvider validKeyProvider
 	 */
-	public function testConstructorWithValidKey($validKey)
+	public function testConstructorWithValidKeys($validKey)
 	{
 
 		$abstractPlace = $this->getMockForAbstractClass($this->classNameToBeTested, array($validKey));
@@ -301,14 +313,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSetInvalidKey($invalidKey)
 	{
-
-		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
-			 				  ->setMethods(null)
-				 			  ->disableOriginalConstructor()
-			 				  ->getMock();	
-
-		$abstractPlace->setKey($invalidKey);
-
+		$this->mockedAbstractPlace->setKey($invalidKey);
 	}
 
 	/**
@@ -332,10 +337,24 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	{
 
 		$this->getMockBuilder($this->classNameToBeTested)
-			 ->setMethods(null)
+			 ->setMethods(array('validateRequiredParameters'))
 			 ->setConstructorArgs(array('validKey', $invalidRequestParameters))
-			 ->getMock();
+			 ->getMockForAbstractClass();
 
+	}
+
+	/**
+	 * @depends testExist
+	 * @dataProvider invalidRequestParametersProvider
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testInvalidOutputFormat($invalidOutputFormat)
+	{
+		
+		$this->getMockBuilder($this->classNameToBeTested)
+			 ->setMethods(array('validateRequiredParameters'))
+			 ->setConstructorArgs(array('validKey', ['validParameterKey' => 'validParameterValue'], $invalidOutputFormat))
+			 ->getMockForAbstractClass();
 	}
 
 	/**
@@ -346,13 +365,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testSetRequestParameterInvalid($key, $value)
 	{
 
-		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
-			 				  ->setMethods(null)
-				 			  ->disableOriginalConstructor()
-			 				  ->getMock();
-
-
-		$abstractPlace->setRequestParameter($key, $value);
+		$this->mockedAbstractPlace->setRequestParameter($key, $value);
 
 	}
 
@@ -363,13 +376,7 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testGetRequestParameterInvalid($invalidKey)
 	{
 
-		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
-			 				  ->setMethods(null)
-				 			  ->disableOriginalConstructor()
-			 				  ->getMock();
-
-
-		$abstractPlace->getRequestParameter($invalidKey);
+		$this->mockedAbstractPlace->getRequestParameter($invalidKey);
 
 	}
 
@@ -379,15 +386,9 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 	public function testSetGetRequestParameter()
 	{
 
-		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
-			 				  ->setMethods(null)
-				 			  ->disableOriginalConstructor()
-			 				  ->getMock();
+		$this->mockedAbstractPlace->setRequestParameter('query1', '1');
 
-
-		$abstractPlace->setRequestParameter('query1', '1');
-
-		$this->assertEquals($abstractPlace->getRequestParameter('query1'), '1');
+		$this->assertEquals($this->mockedAbstractPlace->getRequestParameter('query1'), '1');
 
 	}
 
@@ -399,14 +400,9 @@ class AbstractPlaceTest extends PHPUnit_Framework_TestCase
 
 		$inputArray = ['testQuery1' => 'testQuery1', 'testQuery2' => 'testQuery2'];
 
-		$abstractPlace = $this->getMockBuilder($this->classNameToBeTested)
-			 				  ->setMethods(null)
-				 			  ->disableOriginalConstructor()
-			 				  ->getMock();
-		
-		$abstractPlace->setRequestParameters($inputArray);
+		$this->mockedAbstractPlace->setRequestParameters($inputArray);
 
-		$this->assertEquals($abstractPlace->getRequestParameters(), $inputArray);
+		$this->assertEquals($this->mockedAbstractPlace->getRequestParameters(), $inputArray);
 
 	}
 
