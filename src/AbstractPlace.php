@@ -1,5 +1,4 @@
 <?php
-
 namespace JianHan\GooglePlaces;
 
 abstract class AbstractPlace
@@ -11,61 +10,58 @@ abstract class AbstractPlace
 
 	public function __construct(string $key)
 	{
-		
+	
+		if(empty($key)) throw new \InvalidArgumentException('API key can not be blank');
+
 		$this->key = $key;
 
 	}
 
 	protected abstract function validateRequiredParameters();
 	
-	protected function getClassShortName() : string
+	public function setRequestParameters(array $requestParameters = array())
 	{
 
-		$reflection = new \ReflectionClass(get_called_class());
+		if(empty($requestParameters)) throw new \InvalidArgumentException('Set request parameters must not be empty array');
 
-		return $reflection->getShortName();
+		array_walk($requestParameters, function($value, $key){
 
-	}
+			if(empty($value)) throw new \InvalidArgumentException('Request parameter "'.$key.'" can NOT be blank');
 
-	public function getKey() : string
-	{
+			if(!is_string($value)) throw new \InvalidArgumentException('Request parameter "'.$key.'" can only be string. ');
 
-		return $this->key;
-
-	}
-
-	public function setKey(string $key)
-	{
-
-		$this->key = $key;
-
-	}
-
-	public function getRequestParameters() : array
-	{
-
-		return $this->requestParameters;
-
-	}
-	
-	public function setRequestParameters(array $requestParameters = array()) : array
-	{
+		});
 
 		$this->requestParameters = $requestParameters;
 
 	}
 
-	public function setRequestParameter(string $parameterKey, string $parameterValue)
+	public function getRequestParameters()
 	{
 
-		$this->requestParameters[$parameterKey] = $parameterValue;
+		return $this->requestParameters;
 
 	}
 
-	public function getRequestParameter($parameterKey) : string
+	public static function getInstance($service, $key)
 	{
 
-		return $this->requestParameters[$parameterKey];
+		$className = __NAMESPACE__.'\\'.$service;
+
+		if(class_exists($className))
+		{
+
+			$classInstance = new $className($service, $key);
+
+			if(!($classInstance instanceof \JianHan\GooglePlaces\AbstractPlace)) throw new \Exception('System exception, invalid type');
+
+			return $classInstance;
+
+		}
+		else
+		{
+			throw new \UnexpectedValueException($service.' has not been implemented yet.');
+		}
 
 	}
 
