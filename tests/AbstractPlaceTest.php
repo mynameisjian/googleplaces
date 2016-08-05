@@ -100,9 +100,8 @@ class AbstractPlaceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers JianHan\GooglePlaces\AbstractPlace::getRequestParameters
-     * @covers JianHan\GooglePlaces\AbstractPlace::setRequestParameters
      */
-    public function testGetRequestParameters()
+    public function testGetRequestParameters_Successful()
     {
 
     	$validArray = ['1' => 'one', '2' => 'two'];
@@ -118,7 +117,7 @@ class AbstractPlaceTest extends \PHPUnit_Framework_TestCase
      * @covers JianHan\GooglePlaces\AbstractPlace::setRequestParameters
      * @expectedException InvalidArgumentException
      */
-    public function testSetRequestParametersWithEmptyArray()
+    public function testSetRequestParameters_WithEmptyArray_ThrowException()
     {
 
     	$emptyArray = [];
@@ -131,7 +130,7 @@ class AbstractPlaceTest extends \PHPUnit_Framework_TestCase
      * @covers JianHan\GooglePlaces\AbstractPlace::setRequestParameters
      * @expectedException InvalidArgumentException
      */
-    public function testSetRequestParametersWithMultiDementionalArray()
+    public function testSetRequestParameters_WithMultiDementionalArray_ThrowException()
     {
 
     	$mutiDementionalArray = ['test', [1,2,3], 'test2'];
@@ -143,7 +142,7 @@ class AbstractPlaceTest extends \PHPUnit_Framework_TestCase
      * @covers JianHan\GooglePlaces\AbstractPlace::getInstance
      * @dataProvider validPlaceInstanceServices
      */
-    public function testGetInstance($service, $key)
+    public function testGetInstance_Successful($service, $key)
     {
 
     	$serviceInstance = \JianHan\GooglePlaces\AbstractPlace::getInstance($service, $key);

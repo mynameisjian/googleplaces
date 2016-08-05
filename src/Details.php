@@ -6,7 +6,7 @@ class Details extends AbstractPlace
 	
 	public function validateRequiredParameters()
 	{
-		
+				
 	}	
 
 }
