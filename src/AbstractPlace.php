@@ -17,7 +17,7 @@ abstract class AbstractPlace
 
 	}
 
-	protected abstract function validateRequiredParameters();
+	public abstract function validateRequiredParameters();
 	
 	public function setRequestParameters(array $requestParameters = array())
 	{
@@ -51,7 +51,7 @@ abstract class AbstractPlace
 		if(class_exists($className))
 		{
 
-			$classInstance = new $className($service, $key);
+			$classInstance = new $className($key);
 
 			if(!($classInstance instanceof \JianHan\GooglePlaces\AbstractPlace)) throw new \Exception('System exception, invalid type');
 

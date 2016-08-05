@@ -92,7 +92,7 @@ class AbstractPlaceTest extends \PHPUnit_Framework_TestCase
 
     	return [
 
-    		['nearbysearch', 'key'], ['textsearch', 'key'], ['radarsearch', 'key'], ['details', 'key']
+    		['NearBySearch', 'key'], ['TextSearch', 'key'], ['RadarSearch', 'key'], ['Details', 'key']
 
     	];
 
