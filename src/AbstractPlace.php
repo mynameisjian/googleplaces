@@ -57,10 +57,8 @@ abstract class AbstractPlace
 			return $classInstance;
 
 		}
-		else
-		{
-			throw new \UnexpectedValueException($service.' has not been implemented yet.');
-		}
+		
+		throw new \UnexpectedValueException($service.' has not been implemented yet.');
 
 	}
 
