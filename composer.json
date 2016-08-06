@@ -25,7 +25,8 @@
         "phploc/phploc": "*",
         "codeclimate/php-test-reporter": "dev-master",
         "phpunit/phpunit-skeleton-generator": "*",
-        "mockery/mockery": "~1.0@dev"
+        "mockery/mockery": "~1.0@dev",
+        "mikey179/vfsStream": "1.6.4"
     },
     "autoload": {
         "psr-4": {

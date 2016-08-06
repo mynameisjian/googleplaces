@@ -1,5 +1,4 @@
-<?php
-namespace JianHan\GooglePlaces;
+<?php namespace JianHan\GooglePlaces;
 
 abstract class AbstractPlace
 {
@@ -53,7 +52,7 @@ abstract class AbstractPlace
 
 			$classInstance = new $className($key);
 
-			if(!($classInstance instanceof \JianHan\GooglePlaces\AbstractPlace)) throw new \Exception('System exception, invalid type');
+			if(!($classInstance instanceof \JianHan\GooglePlaces\AbstractPlace)) throw new \Exception('System exception, invalid service type');
 
 			return $classInstance;
 

@@ -1,5 +1,4 @@
-<?php
-namespace JianHan\GooglePlaces;
+<?php namespace JianHan\GooglePlaces;
 
 class NearBySearch extends AbstractPlace
 {
